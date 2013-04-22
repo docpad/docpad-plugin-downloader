@@ -5,10 +5,12 @@ module.exports = (BasePlugin) ->
 	hyperquest = require('hyperquest')
 	tar = require('tar')
 	rimraf = require('rimraf')
+	ProgressBar = require('progress')
 	zlib = require('zlib')
 	fsUtil = require('fs')
 	pathUtil = require('path')
-	ProgressBar = require('progress')
+	stream = require('stream')
+	domain = require('domain')
 
 	# Define Plugin
 	class DownloaderPlugin extends BasePlugin
@@ -25,13 +27,17 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			docpad = @docpad
 			config = @getConfig()
-			docpadConfig = docpad.getConfig()
-			tasks = new TaskGroup().setConfig(concurrency:0).once('complete',next)
 			downloads = config.downloads or []
 			cleanOnReset = config.cleanOnReset
 
-			# Cycle through the downloads
-			downloads.forEach (download) -> tasks.addTask (complete) ->
+			# Skip if
+			# - we have no downloads
+			# - we only want to download on reset, and we are not a reset
+			return next()  if downloads.length is 0 or (cleanOnReset and opts.reset is false)
+
+			# Expand download paths
+			docpadConfig = docpad.getConfig()
+			downloads.forEach (download) ->
 				# Normalize path
 				download.path = download.path
 					.replace(/^src\/documents/, docpadConfig.documentsPaths[0])
@@ -39,80 +45,83 @@ module.exports = (BasePlugin) ->
 					.replace(/^src/, docpadConfig.srcPath)
 					.replace(/^out/, docpadConfig.outPath)
 
-				# Skip the download if
-				# - we care about resets and this is not a rest
-				# - our path already exists
-				return complete()  if (cleanOnReset and opts.reset is false) or fsUtil.existsSync(download.path) is true
+			# Tasks
+			tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+				# No need to cleanup as everything worked
+				return next()  unless err
 
-				# Prepare
-				download.extract ?= true
-				download.gzip ?= false
-				download.tar ?= false
-				download.tarclean ?= false
-				errord = false
-				cleanDirs = []
-				errorHandler = (err) ->
-					if err
-						docpad.warn(err)
-						errord = true
-				successHandler = (err) ->
-					errorHandler(err)  if err
-					unless errord
-						docpad.log('info', "Downloaded #{download.name}")  unless errord
+				# Cleanup as something failed
+				docpad.warn(err)
+				cleanTasks = new TaskGroup().setConfig(concurrency:0).once('complete',next)
+				downloads.forEach (download) -> cleanTasks.addTask (complete) ->
+					rimraf(download.path, complete)
+				cleanTasks.run()
 
-				# Request
-				req = hyperquest(download.url)
+			# Cycle through the downloads
+			downloads.forEach (download) -> tasks.addTask (complete) ->
+				# Skip the download if our path already exists
+				return complete()  if fsUtil.existsSync(download.path) is true
 
-				# Progress
-				req.on 'response', (res) ->
-					len = res.headers['content-length'] or 0
-					unless len
-						docpad.log('info', "Downloading #{download.name}")
-						return
-
-					len = parseInt(len,10)
-					bar = new ProgressBar("Downloading #{download.name} [:bar] :percent :etas", {
-						complete: '='
-						incomplete: ' '
-						width: 20
-						total: len
+				# Errors
+				d = domain.create()
+				d.on('error', complete)
+				d.run ->
+					# Request
+					req = hyperquest(download.url,{
+						headers:
+							'accept-encoding': 'gzip,deflate'
 					})
+					out = req
 
-					res.on 'data', (chunk) ->
-						bar.tick(chunk.length)
+					# Handle
+					req.on 'response', (res) ->
+						# Progress
+						len = res.headers['content-length'] or 0
+						if len
+							len = parseInt(len,10)
+							bar = new ProgressBar("Downloading #{download.name} [:bar] :percent :etas", {
+								complete: '='
+								incomplete: ' '
+								width: 20
+								total: len
+							})
+							res.on 'data', (chunk) ->
+								bar.tick(chunk.length)
+						else
+							docpad.log('info', "Downloading #{download.name}")
 
-					res.on 'end', ->
-						console.log('\n')
+						# Prepare
+						download.deflate ?= res.headers['content-encoding'] is 'deflate'
+						download.gzip ?= res.headers['content-encoding'] is 'gzip' or (res.headers['content-type'] or '').indexOf('gzip') isnt -1
+						download.tarExtract ?= (res.headers['content-disposition'] or '').indexOf('.tar') isnt -1
+						download.tarExtractClean ?= false
 
-				# Gzip
-				if download.deflate
-					req = req.pipe(zlib.createDeflate())
+						# Deflate
+						if download.deflate
+							out = out.pipe(zlib.createInflate())
 
-				# Gzip
-				if download.gzip
-					req = req.pipe(zlib.createGunzip())
+						# Gzip
+						if download.gzip
+							out = out.pipe(zlib.createGunzip())
 
-				# Tar
-				if download.tar
-					req = req.pipe(tar.Extract(download.path))
-					if download.tarclean
-						req.on 'entry', (entry) ->
-							entryPathParts = entry.path.split(/[\\\/]/)
-							cleanDirs.push(entryPathParts[0])  unless entryPathParts[0] in cleanDirs
-							entry.path = entryPathParts.slice(1).join(pathUtil.sep)
-				else
-					req = req.pipe(fsUtil.createWriteStream(download.path))
+						# Tar
+						if download.tarExtract
+							out = tar = out.pipe(tar.Extract(download.path))
+							if download.tarExtractClean
+								cleanDirs = []
+								tar.on 'entry', (entry) ->
+									entryPathParts = entry.path.split(/[\\\/]/)
+									cleanDirs.push(entryPathParts[0])  unless entryPathParts[0] in cleanDirs
+									entry.path = entryPathParts.slice(1).join(pathUtil.sep)
+								tar.on 'close', ->
+									cleanDirs.forEach (cleanDir) -> tasks.addTask (complete) ->
+										rimraf(pathUtil.join(download.path, cleanDir), complete)
+						# File
+						else
+							out = out.pipe(fsUtil.createWriteStream(download.path))
 
-				# Finish
-				req.on 'error', (err) ->
-					errorHandler(err)
-					cleanDirs.forEach (cleanDir) -> tasks.addTask (complete) ->
-						rimraf(pathUtil.join(download.path, cleanDir), complete)
-				req.on 'close', ->
-					cleanDirs.forEach (cleanDir) -> tasks.addTask (complete) ->
-						rimraf(pathUtil.join(download.path, cleanDir), complete)
-					successHandler()
-					complete()
+						# Complete
+						out.on('close',complete)
 
 			# Fire
 			tasks.run()

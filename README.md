@@ -28,9 +28,7 @@ module.exports =
 					name: 'Gist Bundle'
 					path: 'src/documents/gist'
 					url: 'https://gist.github.com/balupton/5432249/download'
-					gzip: true
-					tar: true
-					tarclean: true
+					tarExtractClean: true
 				}
 				{
 					name: 'Gist File'
@@ -39,6 +37,16 @@ module.exports =
 				}
 			]
 ```
+
+Available download options:
+
+- `name` string, name of the download, for logging purposes only
+- `path` string, path that the completed download is placed
+- `url` string, url the download is retrieved from
+- `deflate` boolean, whether or not we should deflate the response when fetching the download (auto-detected if not set)
+- `gzip` boolean, whether or not we should unzip the response when fetching the download (auto-detected if not set)
+- `tarExtract` boolean, whether or not we should extract tar downloads (auto-detected if not set)
+- `tarExtractClean` boolean, whether or not when performing a tar extraction if we should remove the root directory of the extracted files
 
 
 

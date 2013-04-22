@@ -6,9 +6,7 @@ module.exports =
 					name: 'Gist Bundle'
 					path: 'src/documents/gist'
 					url: 'https://gist.github.com/balupton/5432249/download'
-					gzip: true
-					tar: true
-					tarclean: true
+					tarExtractClean: true
 				}
 				{
 					name: 'Gist File'
