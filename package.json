@@ -1,12 +1,12 @@
 {
-	"name": "docpad-plugin-repocloner",
+	"name": "docpad-plugin-downloader",
 	"version": "2.0.0",
-	"description": "DocPad plugin that clones out repos into your website",
-	"homepage": "http://docpad.org/plugin/repocloner",
+	"description": "Download (and optionally extract) files into your project before your project starts generating",
+	"homepage": "http://docpad.org/plugin/downloader",
 	"keywords": [
 		"docpad",
 		"docpad-plugin",
-		"repo", "repository", "git", "clone"
+		"download"
 	],
 	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
 	"maintainers": [
@@ -16,26 +16,29 @@
 		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
 	],
 	"bugs": {
-		"url": "https://github.com/docpad/docpad-plugin-repocloner/issues"
+		"url": "https://github.com/docpad/docpad-plugin-downloader/issues"
 	},
 	"repository" : {
 		"type": "git",
-		"url": "https://github.com/docpad/docpad-plugin-repocloner.git"
+		"url": "https://github.com/docpad/docpad-plugin-downloader.git"
 	},
 	"engines" : {
 		"node": ">=0.4",
 		"docpad": ">=6.1 <7"
 	},
 	"dependencies": {
-		"extendr": "~2.0.1",
-		"bal-util": "~2.0.0",
-		"taskgroup": "~3.1.1"
+		"tar": "~0.1.17",
+		"hyperquest": "~0.1.4",
+		"taskgroup": "~3.1.1",
+		"rimraf": "~2.1.4",
+		"progress": "~0.1.0"
 	},
 	"devDependencies": {
-		"coffee-script": "~1.6.2"
+		"coffee-script": "~1.6.2",
+		"docpad": ">=6.1 <7"
 	},
-	"main": "./out/repocloner.plugin.js",
+	"main": "./out/downloader.plugin.js",
 	"scripts": {
-		"test": "node ./out/repocloner.test.js"
+		"test": "node ./out/downloader.test.js"
 	}
 }

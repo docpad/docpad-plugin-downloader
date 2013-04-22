@@ -1,8 +1,18 @@
 module.exports =
 	plugins:
-		repocloner:
-			repos: [
-				name: 'Plugin Wiki'
-				path: 'src/documents/wiki'
-				url: 'https://github.com/docpad/docpad-plugin-repocloner.wiki.git'
+		downloader:
+			downloads: [
+				{
+					name: 'Gist Bundle'
+					path: 'src/documents/gist'
+					url: 'https://gist.github.com/balupton/5432249/download'
+					gzip: true
+					tar: true
+					tarclean: true
+				}
+				{
+					name: 'Gist File'
+					path: 'src/documents/a.html.md'
+					url: 'https://gist.github.com/balupton/5432249/raw/1e1cd6d374d0565aaab30566ec9055219d857aec/a.html.md'
+				}
 			]

@@ -15,5 +15,6 @@ node_modules
 npm-debug.log
 
 test/out/
-test/src/documents/wiki/
+test/src/documents/gist/
+test/src/documents/a.html.md
 out/
