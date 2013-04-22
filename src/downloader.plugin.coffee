@@ -87,6 +87,8 @@ module.exports = (BasePlugin) ->
 							})
 							res.on 'data', (chunk) ->
 								bar.tick(chunk.length)
+							res.on 'end', ->
+								console.log('\n')
 						else
 							docpad.log('info', "Downloading #{download.name}")
 
