@@ -35,7 +35,8 @@
 	},
 	"devDependencies": {
 		"coffee-script": "~1.6.2",
-		"docpad": ">=6.1 <7"
+		"docpad": ">=6.1 <7",
+		"chai": "~1.5.0"
 	},
 	"main": "./out/downloader.plugin.js",
 	"scripts": {
