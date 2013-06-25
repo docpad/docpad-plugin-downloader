@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-downloader",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"description": "Download (and optionally extract) files into your project before your project starts generating",
 	"homepage": "http://docpad.org/plugin/downloader",
 	"keywords": [
@@ -30,13 +30,12 @@
 		"tar": "~0.1.17",
 		"hyperquest": "~0.1.4",
 		"taskgroup": "~3.1.1",
-		"rimraf": "~2.1.4",
-		"progress": "~0.1.0"
+		"rimraf": "~2.2.0",
+		"progress": "~1.0.0"
 	},
 	"devDependencies": {
 		"coffee-script": "~1.6.2",
-		"docpad": ">=6.1 <7",
-		"chai": "~1.5.0"
+		"docpad": ">=6.37 <7"
 	},
 	"main": "./out/downloader.plugin.js",
 	"scripts": {
