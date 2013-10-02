@@ -1,7 +1,10 @@
 ## History
 
+- v2.1.3 October 2, 2013
+	- Updated dependencies
+
 - v2.1.2 June 26, 2013
-	- Dependency upgrades
+	- Updated dependencies
 
 - v2.1.1 April 22, 2013
 	- Re-added newline after progress bar
