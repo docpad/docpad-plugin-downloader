@@ -1,6 +1,6 @@
 {
   "name": "docpad-plugin-downloader",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "Download (and optionally extract) files into your project before your project starts generating",
   "homepage": "https://github.com/docpad/docpad-plugin-downloader",
   "license": "MIT",
