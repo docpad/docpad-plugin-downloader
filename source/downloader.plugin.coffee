@@ -46,13 +46,13 @@ module.exports = (BasePlugin) ->
 					.replace(/^out/, docpadConfig.outPath)
 
 			# Tasks
-			tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+			tasks = TaskGroup.create(concurrency:0).done (err) ->
 				# No need to cleanup as everything worked
 				return next()  unless err
 
 				# Cleanup as something failed
 				docpad.warn(err)
-				cleanTasks = new TaskGroup().setConfig(concurrency:0).once('complete',next)
+				cleanTasks = TaskGroup.create(concurrency:0).done(next)
 				downloads.forEach (download) -> cleanTasks.addTask (complete) ->
 					rimraf(download.path, complete)
 				cleanTasks.run()
@@ -108,7 +108,7 @@ module.exports = (BasePlugin) ->
 
 						# Tar
 						if download.tarExtract
-							out = tar = out.pipe(tar.Extract(download.path))
+							out = tar = out.pipe(tar.extract(download.path))
 							if download.tarExtractClean
 								cleanDirs = []
 								tar.on 'entry', (entry) ->
