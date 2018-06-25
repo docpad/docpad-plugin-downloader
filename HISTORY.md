@@ -1,6 +1,7 @@
 # History
 
 ## v2.3.0 2018 June 25
+- Minimum supported node version is now node v4 due to [dependency requirements](https://travis-ci.org/docpad/docpad-plugin-downloader/builds/396342787)
 - Now compiled with CoffeeScript v2
 - Updated dependencies
 - Updated base files
