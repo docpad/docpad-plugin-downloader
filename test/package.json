@@ -1,8 +1,8 @@
 {
-	"name": "docpad-plugin-downloader-testsite",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"docpad-plugin-marked": "2.x"
-	}
+  "name": "docpad-plugin-downloader-testsite",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "docpad-plugin-marked": "~2.5.0"
+  }
 }

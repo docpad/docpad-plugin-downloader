@@ -1,1 +1,1 @@
-sample
+here because DocPad needs at least something present inside src in order to do the generation

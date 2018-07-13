@@ -39,4 +39,7 @@ docs/
 # =====================================
 # CUSTOM
 
-# None
+test/out
+test/src/documents/tar/
+test/src/documents/zip/
+test/src/documents/a.html.md

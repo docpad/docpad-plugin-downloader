@@ -3,10 +3,16 @@ module.exports =
 		downloader:
 			downloads: [
 				{
-					name: 'Gist Bundle'
-					path: 'src/documents/gist'
-					url: 'https://gist.github.com/balupton/5432249/download'
-					tarExtractClean: true
+					name: 'Zip Bundle'
+					path: 'src/documents/zip'
+					url: 'https://gist.github.com/balupton/5432249/archive/dd29c677a72fd7ca53c5aadf5437a4167b389a21.zip',
+					decompress: {strip: 1}
+				},
+				{
+					name: 'Tar Bundle'
+					path: 'src/documents/tar'
+					url: 'https://gist.github.com/balupton/5432249/archive/dd29c677a72fd7ca53c5aadf5437a4167b389a21.tar.gz',
+					decompress: {strip: 1}
 				}
 				{
 					name: 'Gist File'
