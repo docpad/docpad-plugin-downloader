@@ -1,5 +1,10 @@
 # History
 
+## v2.5.1 2020 August 13
+
+-   Fix support for older node versions
+-   Updated dependencies, [base files](https://github.com/bevry/base), and [editions](https://editions.bevry.me) using [boundation](https://github.com/bevry/boundation)
+
 ## v2.5.0 2020 August 5
 
 -   Fixed it not working due to not using `docpad.getPath`

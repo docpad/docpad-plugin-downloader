@@ -99,7 +99,6 @@ module.exports = function (BasePlugin) {
 		docpadReady(opts, next) {
 			// Prepare
 			const docpad = this.docpad
-			const docpadConfig = docpad.getConfig()
 			const config = this.getConfig()
 			const downloads = config.downloads || []
 			const cleanOnReset = config.cleanOnReset

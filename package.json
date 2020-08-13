@@ -1,6 +1,6 @@
 {
   "name": "docpad-plugin-downloader",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Download (and optionally extract) files into your project before your project starts generating",
   "homepage": "https://github.com/docpad/docpad-plugin-downloader",
   "license": "MIT",
@@ -91,14 +91,14 @@
   "devDependencies": {
     "@bevry/update-contributors": "^1.15.0",
     "docpad": "^6.83.1",
-    "docpad-plugintester": "^1.6.2",
+    "docpad-plugintester": "^1.7.2",
     "eslint": "^7.6.0",
     "eslint-config-bevry": "^3.18.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.0.5",
     "projectz": "^2.13.0",
-    "valid-directory": "^2.8.0"
+    "valid-directory": "^3.0.0"
   },
   "scripts": {
     "my:clean": "rm -Rf ./test/src/documents/raw ./test/src/documents/zip ./test/src/documents/tar ",
