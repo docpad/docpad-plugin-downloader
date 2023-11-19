@@ -86,7 +86,7 @@
     "docpad-baseplugin": "^1.4.0",
     "http-basic": "^8.1.3",
     "mkdirp": "^1.0.4",
-    "rimraf": "^3.0.2"
+    "rimraf": "^5.0.5"
   },
   "devDependencies": {
     "@bevry/update-contributors": "^1.15.0",
